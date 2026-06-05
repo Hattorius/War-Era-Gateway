@@ -61,6 +61,7 @@ var allowedMethods = []string{
 	"itemTrading.getPrices",
 	"tradingOrder.getTopOrders",
 	"itemOffer.getById",
+	"itemOffer.getItemOffers",
 	"workOffer.getById",
 	"workOffer.getWorkOfferByCompanyId",
 	"workOffer.getWorkOffersPaginated",

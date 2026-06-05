@@ -53,6 +53,20 @@ func multiField(fields ...string) func(json.RawMessage) string {
 	}
 }
 
+func fullInput() func(json.RawMessage) string {
+	return func(input json.RawMessage) string {
+		var m map[string]json.RawMessage
+		if err := json.Unmarshal(input, &m); err != nil {
+			return string(input)
+		}
+		normalized, err := json.Marshal(m)
+		if err != nil {
+			return string(input)
+		}
+		return string(normalized)
+	}
+}
+
 var cacheConfigs = map[string]cacheConfig{
 	"company.getById":                 {5 * time.Minute, singleField("companyId")},
 	"country.getCountryById":          {5 * time.Minute, singleField("countryId")},
@@ -64,6 +78,7 @@ var cacheConfigs = map[string]cacheConfig{
 	"round.getById":                   {5 * time.Minute, singleField("roundId")},
 	"itemTrading.getPrices":           {10 * time.Minute, staticKey()},
 	"itemOffer.getById":               {5 * time.Minute, singleField("itemOfferId")},
+	"itemOffer.getItemOffers":         {1 * time.Minute, fullInput()},
 	"workOffer.getById":               {5 * time.Minute, singleField("workOfferId")},
 	"ranking.getRanking":              {5 * time.Minute, singleField("rankingType")},
 	"gameConfig.getDates":             {5 * time.Minute, staticKey()},
